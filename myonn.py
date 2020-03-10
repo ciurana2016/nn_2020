@@ -26,7 +26,37 @@ class neuralNetwork():
 
         pass
 
-    def train():
+    def train(self, input_list, target_list):
+        # TODO > input_list comes in 2 functionsand we repeat code, do a decorator
+        # Convert input list to 2d array
+        inputs = numpy.array(input_list, ndmin=2).T
+        targets = numpy.array(target_list, ndmin=2).T
+
+        # TODO >  Also we repeat more code..
+        # Calculate signals into hidden layer
+        hidden_inputs = numpy.dot(self.wih, inputs)
+        # Calculate signals emerging from hidden layer
+        hidden_outputs = self.activation_function(hidden_inputs)
+
+        # Calculate signals into final output layer
+        final_inputs = numpy.dot(self.who, hidden_outputs)
+        # Calculate signals emerging from final output layer
+        final_outputs = self.activation_function(final_inputs)
+
+        # Error is the (target - actual)
+        output_errors = tartets - final_outputs
+        # Gidden layer error is the output_errors, split by weights, recombined at hidden nodes
+        hidden_errors = numpy.dot(self.who.T, output_errors)
+
+        # Update the weights for the links between the hidden and output layers
+        self.who += self.lr * numpy.dot((output_errors * final_outputs * (1.0 - final_outputs)), \
+            numpy.transpose(hidden_outputs))
+
+        # Update the weights for the links between the input and output hidden
+        self.wih += self.lr * numpy.dot((hidden_errors * hidden_outputs * (1.0 - hidden_outputs)), \
+            numpy.transpose(inputs))
+
+
         pass
 
     # Make a question to the nn
