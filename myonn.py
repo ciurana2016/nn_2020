@@ -79,6 +79,7 @@ class neuralNetwork():
 
 
 if __name__ == '__main__':
+    print('Init')
     # Creating a neural network
     # input_nodes = 3
     # hidden_nodes = 3
@@ -105,6 +106,7 @@ if __name__ == '__main__':
     # Train the network
     epochs = 5
 
+    print('Training')
     for e in range(epochs):
         for record in training_data_list:
             all_values = record.split(',')
@@ -122,6 +124,7 @@ if __name__ == '__main__':
     # Test the network
     scorecard = []
 
+    print('Testing')
     for record in test_data_list:
         # Todo , dupped code, make a better function
         all_values = record.split(',')
@@ -136,7 +139,7 @@ if __name__ == '__main__':
 
     # Calculate performance rate
     scorecard_array = numpy.asarray(scorecard)
-    print('performance = ' + scorecard_array.sum() / scorecard_array.size)
+    print('performance = ' + str(scorecard_array.sum() / scorecard_array.size))
 
 
 
