@@ -3,7 +3,7 @@ From> Make your own neural network
 '''
 import numpy
 import scipy.special
-
+import matplotlib.pyplot
 
 
 class neuralNetwork():
@@ -44,7 +44,7 @@ class neuralNetwork():
         final_outputs = self.activation_function(final_inputs)
 
         # Error is the (target - actual)
-        output_errors = tartets - final_outputs
+        output_errors = targets - final_outputs
         # Gidden layer error is the output_errors, split by weights, recombined at hidden nodes
         hidden_errors = numpy.dot(self.who.T, output_errors)
 
@@ -80,11 +80,65 @@ class neuralNetwork():
 
 if __name__ == '__main__':
     # Creating a neural network
-    input_nodes = 3
-    hidden_nodes = 3
-    output_nodes = 3
-    learning_rate = 0.3
+    # input_nodes = 3
+    # hidden_nodes = 3
+    # output_nodes = 3
+    # learning_rate = 0.3
+
+    # n = neuralNetwork(input_nodes, hidden_nodes, output_nodes, learning_rate)
+
+    # print(n.query([1.0, 0.5, -1.5]))
+
+    input_nodes = 784
+    hidden_nodes = 100
+    output_nodes = 10
+
+    learning_rate = 0.1
 
     n = neuralNetwork(input_nodes, hidden_nodes, output_nodes, learning_rate)
 
-    print(n.query([1.0, 0.5, -1.5]))
+    # Mnist train
+    training_data_file = open('mnist_dataset/mnist_train.csv', 'r')
+    training_data_list = training_data_file.readlines()
+    training_data_file.close()
+
+    # Train the network
+    epochs = 5
+
+    for e in range(epochs):
+        for record in training_data_list:
+            all_values = record.split(',')
+            # Scale and shift inputs
+            inputs = (numpy.asfarray(all_values[1:]) / 255.0 * 0.99) + 0.01
+            targets = numpy.zeros(output_nodes) + 0.01
+            targets[int(all_values[0])] = 0.99
+            n.train(inputs, targets)
+
+    # Mnist test
+    test_data_file = open('mnist_dataset/mnist_test.csv', 'r')
+    test_data_list = test_data_file.readlines()
+    test_data_file.close()
+
+    # Test the network
+    scorecard = []
+
+    for record in test_data_list:
+        # Todo , dupped code, make a better function
+        all_values = record.split(',')
+        correct_label = int(all_values[0])
+        inputs = (numpy.asfarray(all_values[1:]) / 255.0 * 0.99) + 0.01
+        outputs = n.query(inputs)
+        label = numpy.argmax(outputs)
+        if label == correct_label:
+            scorecard.append(1)
+        else:
+            scorecard.append(0)
+
+    # Calculate performance rate
+    scorecard_array = numpy.asarray(scorecard)
+    print('performance = ' + scorecard_array.sum() / scorecard_array.size)
+
+
+
+
+
